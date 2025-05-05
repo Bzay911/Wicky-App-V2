@@ -1,43 +1,63 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Tabs } from 'expo-router';
+import { Ionicons, Feather } from '@expo/vector-icons';
+import { theme } from '../../constants/theme';
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function TabsLayout() {
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarStyle: {
+          backgroundColor: "#1C2732", // Dark background
+        },
+        tabBarActiveTintColor: '#8BCEA9', // Match the green accent color used in ChatbotIcon
+        tabBarInactiveTintColor: theme.colors.text.secondary, 
+        headerStyle: {
+          backgroundColor: "#1C2732", // Dark background
+        },
+        headerTintColor: '#FFFFFF', // White text
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+        headerShown: false, // Hide the header for all tab screens
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'News',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="newspaper-outline" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="MultiBuilderScreen"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Multi Builder',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="construct-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="OCTDataScreen"
+        options={{
+          title: 'OCT',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="git-compare-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="aflTab"
+        options={{
+          title: 'AFL',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="football-outline" size={size} color={color} />
+          ),
+          href: null, // This makes the tab accessible via navigation but not visible in the tab bar
         }}
       />
     </Tabs>
