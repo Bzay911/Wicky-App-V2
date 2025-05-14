@@ -6,22 +6,52 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "ios": {
+        "resourceClass": "m1-medium"
+      },
+      "env": {
+        "ENVIRONMENT": "development"
+      }
     },
     "preview": {
+      "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
       },
-      "distribution": "internal"
+      "ios": {
+        "resourceClass": "m1-medium",
+        "simulator": true
+      },
+      "env": {
+        "ENVIRONMENT": "preview"
+      }
     },
     "production": {
       "android": {
         "buildType": "app-bundle"
       },
-      "autoIncrement": true
+      "ios": {
+        "resourceClass": "m1-medium"
+      },
+      "autoIncrement": true,
+      "env": {
+        "ENVIRONMENT": "production"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "YOUR_APPLE_ID",
+        "ascAppId": "YOUR_APP_STORE_CONNECT_APP_ID",
+        "appleTeamId": "YOUR_APPLE_TEAM_ID"
+      },
+      "android": {
+        "serviceAccountKeyPath": "path/to/api-key.json",
+        "track": "production"
+      }
+    }
   }
 }

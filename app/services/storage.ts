@@ -8,7 +8,7 @@ const CHUNK_SIZE = 100 * 1024; // 100KB
 /**
  * Stores data with chunking to avoid SQLite limits on Android
  */
-export async function storeData(key: string, value: any): Promise<void> {
+export  default async function storeData(key: string, value: any): Promise<void> {
   try {
     const stringValue = JSON.stringify(value);
     

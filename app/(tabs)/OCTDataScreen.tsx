@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
     ActivityIndicator,

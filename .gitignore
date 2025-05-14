@@ -38,3 +38,8 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# Environment variables
+.env
+.env.*
+!.env.example
