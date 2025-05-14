@@ -627,19 +627,19 @@ export default function SportsNews() {
     }
   };
 
-  // Get sport specific icon and color
-  const getSportIcon = (sport: SportType) => {
-    switch (sport) {
-      case 'nrl':
-        return <MaterialCommunityIcons name="football-australian" size={18} color="#FF6B6B" />;
-      case 'afl':
-        return <MaterialCommunityIcons name="football-australian" size={18} color="#4ECDC4" />;
-      case 'nba':
-        return <Ionicons name="basketball" size={18} color="#FFD166" />;
-      default:
-        return null;
-    }
-  };
+  // // Get sport specific icon and color
+  // const getSportIcon = (sport: SportType) => {
+  //   switch (sport) {
+  //     case 'nrl':
+  //       return <MaterialCommunityIcons name="football-australian" size={18} color="#FF6B6B" />;
+  //     case 'afl':
+  //       return <MaterialCommunityIcons name="football-australian" size={18} color="#4ECDC4" />;
+  //     case 'nba':
+  //       return <Ionicons name="basketball" size={18} color="#FFD166" />;
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   const renderTweet = ({ item, index }: { item: Tweet; index: number }) => {
     // Check if it's an AFL tweet to apply white background to profile image
@@ -791,7 +791,7 @@ export default function SportsNews() {
               ]}
             >
               <MaterialCommunityIcons 
-                name="football-australian" 
+                name="football" 
                 size={16} 
                 color={selectedSport === 'nrl' ? "#FFFFFF" : "#AAAAAA"} 
               />

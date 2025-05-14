@@ -1,19 +1,18 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-  ListRenderItemInfo,
-  ActivityIndicator,
-  Modal,
-  Pressable,
-} from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+    ActivityIndicator,
+    FlatList,
+    ListRenderItemInfo,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

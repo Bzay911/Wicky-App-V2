@@ -1,20 +1,19 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-  ListRenderItemInfo,
-  SafeAreaView,
-  ActivityIndicator,
-  Modal,
-  Pressable,
-} from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+    ActivityIndicator,
+    FlatList,
+    ListRenderItemInfo,
+    Modal,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -1842,14 +1841,19 @@ export default function OddsComparisonScreen() {
                 }))}
                 setOpen={setMarketOpen}
                 setValue={setTempSelectedMarket}
-                style={styles.dropdown}
-                containerStyle={{ backgroundColor: cardBackground }}
-                textStyle={styles.dropdownText}
-                dropDownContainerStyle={styles.dropdownContainer}
-                listItemContainerStyle={{ borderColor }}
+                style={[styles.dropdown, { backgroundColor: isDarkMode ? '#2D3B47' : '#F5F7FA', borderColor: isDarkMode ? 'rgba(24, 234, 185, 0.3)' : 'rgba(0, 0, 0, 0.1)' }]}
+                textStyle={[styles.dropdownText, { color: textColor }]}
+                dropDownContainerStyle={[styles.dropdownContainer, { backgroundColor: isDarkMode ? '#2D3B47' : '#F5F7FA', borderColor: isDarkMode ? 'rgba(24, 234, 185, 0.3)' : 'rgba(0, 0, 0, 0.1)' }]}
+                listItemContainerStyle={{ borderBottomColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)' }}
                 listItemLabelStyle={{ color: textColor }}
                 labelStyle={{ color: textColor }}
                 placeholderStyle={{ color: isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)' }}
+                ArrowDownIconComponent={() => (
+                  <MaterialCommunityIcons name="chevron-down" size={20} color={isDarkMode ? '#18EAB9' : '#666'} />
+                )}
+                ArrowUpIconComponent={() => (
+                  <MaterialCommunityIcons name="chevron-up" size={20} color={isDarkMode ? '#18EAB9' : '#666'} />
+                )}
                 zIndex={4000}
               />
 
@@ -1866,13 +1870,19 @@ export default function OddsComparisonScreen() {
                 ]}
                 setOpen={setMatchesOpen}
                 setValue={setTempSelectedMatch}
-                style={[styles.dropdown, { backgroundColor: cardBackground }]}
+                style={[styles.dropdown, { backgroundColor: isDarkMode ? '#2D3B47' : '#F5F7FA', borderColor: isDarkMode ? 'rgba(24, 234, 185, 0.3)' : 'rgba(0, 0, 0, 0.1)' }]}
                 textStyle={[styles.dropdownText, { color: textColor }]}
-                dropDownContainerStyle={[styles.dropdownContainer, { backgroundColor: cardBackground }]}
-                listItemContainerStyle={{ borderColor }}
+                dropDownContainerStyle={[styles.dropdownContainer, { backgroundColor: isDarkMode ? '#2D3B47' : '#F5F7FA', borderColor: isDarkMode ? 'rgba(24, 234, 185, 0.3)' : 'rgba(0, 0, 0, 0.1)' }]}
+                listItemContainerStyle={{ borderBottomColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)' }}
                 listItemLabelStyle={{ color: textColor }}
                 labelStyle={{ color: textColor }}
                 placeholderStyle={{ color: isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)' }}
+                ArrowDownIconComponent={() => (
+                  <MaterialCommunityIcons name="chevron-down" size={20} color={isDarkMode ? '#18EAB9' : '#666'} />
+                )}
+                ArrowUpIconComponent={() => (
+                  <MaterialCommunityIcons name="chevron-up" size={20} color={isDarkMode ? '#18EAB9' : '#666'} />
+                )}
                 zIndex={3000}
                 zIndexInverse={4000}
                 maxHeight={200}
@@ -1889,13 +1899,19 @@ export default function OddsComparisonScreen() {
                 ]}
                 setOpen={setPlayerTypeOpen}
                 setValue={setTempPlayerTypeFilter}
-                style={[styles.dropdown, { backgroundColor: cardBackground }]}
+                style={[styles.dropdown, { backgroundColor: isDarkMode ? '#2D3B47' : '#F5F7FA', borderColor: isDarkMode ? 'rgba(24, 234, 185, 0.3)' : 'rgba(0, 0, 0, 0.1)' }]}
                 textStyle={[styles.dropdownText, { color: textColor }]}
-                dropDownContainerStyle={[styles.dropdownContainer, { backgroundColor: cardBackground }]}
-                listItemContainerStyle={{ borderColor }}
+                dropDownContainerStyle={[styles.dropdownContainer, { backgroundColor: isDarkMode ? '#2D3B47' : '#F5F7FA', borderColor: isDarkMode ? 'rgba(24, 234, 185, 0.3)' : 'rgba(0, 0, 0, 0.1)' }]}
+                listItemContainerStyle={{ borderBottomColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)' }}
                 listItemLabelStyle={{ color: textColor }}
                 labelStyle={{ color: textColor }}
                 placeholderStyle={{ color: isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)' }}
+                ArrowDownIconComponent={() => (
+                  <MaterialCommunityIcons name="chevron-down" size={20} color={isDarkMode ? '#18EAB9' : '#666'} />
+                )}
+                ArrowUpIconComponent={() => (
+                  <MaterialCommunityIcons name="chevron-up" size={20} color={isDarkMode ? '#18EAB9' : '#666'} />
+                )}
                 zIndex={2000}
                 zIndexInverse={3000}
               />
@@ -1909,8 +1925,8 @@ export default function OddsComparisonScreen() {
                   <View style={[
                     styles.checkboxBox, 
                     { 
-                      borderColor: accentColor,
-                      backgroundColor: tempIsDarkMode ? accentColor : 'transparent' 
+                      borderColor: '#18EAB9',
+                      backgroundColor: tempIsDarkMode ? '#18EAB9' : 'transparent' 
                     }
                   ]}>
                     {tempIsDarkMode && (
@@ -1935,8 +1951,8 @@ export default function OddsComparisonScreen() {
                   <View style={[
                     styles.checkboxBox, 
                     { 
-                      borderColor: accentColor,
-                      backgroundColor: tempIsDetailedView ? accentColor : 'transparent' 
+                      borderColor: '#18EAB9',
+                      backgroundColor: tempIsDetailedView ? '#18EAB9' : 'transparent' 
                     }
                   ]}>
                     {tempIsDetailedView && (
@@ -1956,16 +1972,16 @@ export default function OddsComparisonScreen() {
 
             <View style={styles.modalButtons}>
               <TouchableOpacity 
-                style={[styles.button, styles.buttonCancel, { borderColor }]}
+                style={[styles.button, styles.buttonCancel, { borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)' }]}
                 onPress={() => setSettingsVisible(false)}
               >
                 <Text style={[styles.buttonText, { color: textColor }]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity 
-                style={[styles.button, styles.buttonApply, { backgroundColor: accentColor }]}
+                style={[styles.button, styles.buttonApply, { backgroundColor: '#18EAB9' }]}
                 onPress={applySettings}
               >
-                <Text style={[styles.buttonText, { color: '#FFFFFF' }]}>Apply Changes</Text>
+                <Text style={[styles.buttonText, { color: '#1C2732' }]}>Apply Changes</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -2134,19 +2150,27 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 1,
     marginRight: 12,
+    minWidth: 100,
   },
   buttonApply: {
-    minWidth: 120,
+    minWidth: 140,
+    shadowColor: '#18EAB9',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   dropdown: {
     borderRadius: 8,
-    minHeight: 45,
+    minHeight: 48,
     elevation: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 1,
     borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   dropdownContainer: {
     borderRadius: 8,
@@ -2156,10 +2180,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     borderWidth: 1,
+    marginTop: 4,
   },
   dropdownText: {
-    fontSize: 14,
-    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '500',
   },
   button: {
     padding: 12,
@@ -2172,6 +2197,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    minHeight: 48,
   },
   buttonText: {
     fontSize: 16,
@@ -2191,17 +2217,17 @@ const styles = StyleSheet.create({
   },
   toggleText: {
     fontSize: 16,
-    color: '#FFFFFF',
+    fontWeight: '500',
   },
   checkbox: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   checkboxBox: {
-    width: 22,
-    height: 22,
+    width: 24,
+    height: 24,
+    borderRadius: 6,
     borderWidth: 2,
-    borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },

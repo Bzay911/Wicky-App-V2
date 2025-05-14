@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  StyleSheet, 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  ScrollView, 
-  ActivityIndicator,
-  Alert,
-  Platform,
-  Animated,
-  TextInput,
-  Image
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useMultiBuilder } from '../../context/MultiBuilderContext';
-import RecommendationSection from '../components/RecommendationSection';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+    ActivityIndicator,
+    Alert,
+    Animated,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useMultiBuilder } from '../../context/MultiBuilderContext';
 import BetSlipModal from '../components/BetSlipModal';
+import RecommendationSection from '../components/RecommendationSection';
 
 interface Recommendation {
   name: string;
@@ -752,14 +750,14 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     flexDirection: 'row',
-    shadowColor: '#7FFFD4',
+    shadowColor: 'rgba(127, 255, 212, 0.5)',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 3,
   },
   analyzeButtonDisabled: {
     backgroundColor: '#7FFFD480',
@@ -808,14 +806,14 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    shadowColor: '#7FFFD4',
+    shadowColor: 'rgba(127, 255, 212, 0.5)',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 3,
   },
   viewSlipButtonText: {
     color: '#1C2732',

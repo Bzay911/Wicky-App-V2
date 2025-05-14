@@ -12,13 +12,18 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
+    "@langchain/openai": "^0.5.10",
+    "@react-native-async-storage/async-storage": "2.1.2",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@react-navigation/stack": "^7.3.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
     "expo": "~53.0.7",
     "expo-blur": "~14.1.4",
     "expo-constants": "~17.1.5",
+    "expo-crypto": "~14.1.4",
     "expo-font": "~13.3.1",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.1.6",
@@ -50,6 +55,19 @@
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "typescript": "~5.8.3"
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-element-dropdown",
+          "@langchain/openai",
+          "dotenv",
+          "openai"
+        ],
+        "listUnknownPackages": false
+      }
+    }
   },
   "private": true
 }

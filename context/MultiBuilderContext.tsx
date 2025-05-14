@@ -1,6 +1,6 @@
-import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { Alert } from 'react-native';
 import { OpenAI } from 'openai';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 
 // Import the JSON data
 const nrlUpcomingMatchups = require('../assets/NRL_Upcoming_Matchup.json');

@@ -1,19 +1,19 @@
+import ChatbotIcon from '@/components/ChatbotIcon';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect } from 'react';
+import { StyleSheet, useColorScheme, View } from 'react-native';
 import 'react-native-reanimated';
-import { useColorScheme, View, Platform, StyleSheet } from 'react-native';
-// import ChatbotIcon from '@/components/ChatbotIcon';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { usePathname } from 'expo-router';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import { ApiProvider } from '../context/ApiContext';
-import { MultiBuilderProvider } from '../context/MultiBuilderContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../constants/theme';
+import { MultiBuilderProvider } from '../context/MultiBuilderContext';
 
 // Configure splash screen
 SplashScreen.preventAutoHideAsync()
@@ -30,17 +30,17 @@ export default function RootLayout() {
   const isChatScreen = pathname === '/ChatScreen';
 
   // Temporary effect to reset chat icon visibility
-  // useEffect(() => {
-  //   const resetChatIconVisibility = async () => {
-  //     try {
-  //       await AsyncStorage.removeItem('@chat_icon_visible');
-  //       console.log('Chat icon visibility reset');
-  //     } catch (error) {
-  //       console.error('Error resetting chat icon visibility:', error);
-  //     }
-  //   };
-  //   resetChatIconVisibility();
-  // }, []);
+  useEffect(() => {
+    const resetChatIconVisibility = async () => {
+      try {
+        await AsyncStorage.removeItem('@chat_icon_visible');
+        console.log('Chat icon visibility reset');
+      } catch (error) {
+        console.error('Error resetting chat icon visibility:', error);
+      }
+    };
+    resetChatIconVisibility();
+  }, []);
 
   useEffect(() => {
     if (error) console.log('Error loading fonts:', error);
@@ -75,6 +75,7 @@ export default function RootLayout() {
               onLayout={onLayoutRootView}
             >
               <Stack
+                initialRouteName="(tabs)" 
                 screenOptions={{
                   headerStyle: {
                     backgroundColor: theme.colors.surface,
@@ -94,7 +95,7 @@ export default function RootLayout() {
                 <Stack.Screen name="+not-found" options={{ headerShown: false }} />
               </Stack>
               <StatusBar style="light" />
-              {/* {!isChatScreen && <ChatbotIcon />} */}
+              {!isChatScreen && <ChatbotIcon />}
             </View>
           </ThemeProvider>
         </MultiBuilderProvider>
