@@ -43,3 +43,10 @@ app-example
 .env
 .env.*
 !.env.example
+
+# ios and android 
+/ios
+/android
+
+# for keystore 
+credentials.json

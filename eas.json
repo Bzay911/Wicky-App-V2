@@ -11,7 +11,9 @@
         "resourceClass": "m1-medium"
       },
       "env": {
-        "ENVIRONMENT": "development"
+        "APP_VARIANT": "development",
+        "EXPO_PUBLIC_OPENAI_API_KEY": "your_development_openai_key",
+        "EXPO_PUBLIC_TWITTER_API_KEY": "your_development_twitter_key"
       }
     },
     "preview": {
@@ -25,7 +27,7 @@
         "simulator": true
       },
       "env": {
-        "ENVIRONMENT": "preview"
+        "APP_VARIANT": "preview"
       }
     },
     "production": {
@@ -37,7 +39,9 @@
       },
       "autoIncrement": true,
       "env": {
-        "ENVIRONMENT": "production"
+        "APP_VARIANT": "production",
+        "EXPO_PUBLIC_OPENAI_API_KEY": "your_production_openai_key",
+        "EXPO_PUBLIC_TWITTER_API_KEY": "your_production_twitter_key"
       }
     }
   },

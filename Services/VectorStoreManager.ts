@@ -1,5 +1,6 @@
 import { OpenAIEmbeddings } from "@langchain/openai";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from 'expo-constants';
 import * as crypto from 'expo-crypto';
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
@@ -61,7 +62,7 @@ export class VectorStoreManager {
    */
   constructor(baseDir?: string) {
     this.embeddings = new OpenAIEmbeddings({
-      openAIApiKey: process.env.EXPO_PUBLIC_OPENAI_API_KEY,
+      openAIApiKey: Constants.expoConfig?.extra?.openAiApiKey,
     });
     this.baseDir = baseDir || FileSystem.documentDirectory || '';
     this.assetsDir = `${FileSystem.documentDirectory}assets/`;

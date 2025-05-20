@@ -8,11 +8,10 @@ type ChatRole = "system" | "user" | "assistant" | "human";
 
 export class ChatBot {
   private config: ChatConfig;
-  private llm: ChatOpenAI;
+  private llm: ChatOpenAI | { invoke: (...args: any[]) => Promise<any> };
   private prompts: Record<string, string> = {};
 
   constructor(config?: Partial<ChatConfig>) {
-    // Initialize with default config or provided config
     this.config = {
       model: "gpt-4o",
       temperature: 0,
@@ -21,89 +20,70 @@ export class ChatBot {
     };
 
     try {
-    
-      const APIKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
+      const APIKey = Constants.expoConfig?.extra?.openAiApiKey;
+      console.log("[ChatBot] OpenAI API Key:", APIKey ? 'Set' : 'Not set');
+      let apiKey = APIKey || '';
 
-      let apiKey =  APIKey || '';
-      
-      
-      // More robust API key validation
       if (!apiKey) {
-        console.error("OpenAI API key not found in any configuration source");
-        console.error("Checked @env, process.env and Constants.expoConfig.extra");
-        
+        logger.error("[ChatBot] OpenAI API key not found in Constants.expoConfig.extra");
         if (Platform.OS === 'android') {
-          console.error("On Android, environment variables may require special handling in production builds");
-          console.error("Attempting to continue with empty key - API calls will likely fail");
+          logger.error("[ChatBot] On Android, environment variables may require special handling in production builds");
         }
       }
-      
-      // More detailed API key validation
+
       if (apiKey && apiKey.startsWith("sk-")) {
-        console.log("API key format appears valid");
+        logger.info("[ChatBot] API key format appears valid");
       } else if (apiKey) {
-        console.warn(`API key format may be invalid: ${apiKey.substring(0, 4)}...`);
+        logger.warn(`[ChatBot] API key format may be invalid: ${apiKey.substring(0, 4)}...`);
       }
 
-      // Initialize LLM with better error handling
       try {
+        if (!apiKey) {
+          throw new Error("[ChatBot] OpenAI API key is missing. Please set the EXPO_PUBLIC_OPENAI_API_KEY environment variable.");
+        }
         this.llm = new ChatOpenAI({
           openAIApiKey: apiKey,
           modelName: this.config.model,
           temperature: this.config.temperature,
           maxTokens: this.config.maxTokens,
-          timeout: 30000, // 30 second timeout
+          timeout: 30000,
         });
-        
-        console.log("ChatOpenAI instance initialized successfully");
+        logger.info("[ChatBot] ChatOpenAI instance initialized successfully");
       } catch (llmError) {
-        console.error("Error initializing ChatOpenAI:", llmError);
-        
-        // Create a fallback instance that will handle errors better
+        logger.error("[ChatBot] Error initializing ChatOpenAI:", llmError);
         this.llm = {
           invoke: async () => {
-            throw new Error("LLM not properly initialized due to API key or configuration issues");
+            throw new Error("[ChatBot] LLM not properly initialized due to API key or configuration issues");
           }
-        } as any;
+        };
       }
 
-      // Initialize prompts for different sports
       this.initializePrompts();
-
-      // Test API connection in background to catch issues early
       this.testApiConnection().catch(error => {
-        console.warn("API connection test failed:", error.message);
+        logger.warn("[ChatBot] API connection test failed:", error.message);
       });
     } catch (initError) {
-      console.error("Error during ChatBot initialization:", initError);
-      
-      // Ensure LLM is at least initialized to something that won't crash the app
+      logger.error("[ChatBot] Error during ChatBot initialization:", initError);
       this.llm = {
         invoke: async () => {
-          throw new Error("LLM not properly initialized");
+          throw new Error("[ChatBot] LLM not properly initialized");
         }
-      } as any;
-      
-      // Initialize prompts to avoid further errors
+      };
       this.prompts = {};
       this.initializePrompts();
     }
   }
 
-  /**
-   * Tests the OpenAI API connection to make sure it's working
-   * @private
-   */
   private async testApiConnection(): Promise<void> {
     try {
-      console.log("Testing OpenAI API connection...");
+      logger.info("[ChatBot] Testing OpenAI API connection...");
       const testResponse = await this.llm.invoke([
         { role: "user", content: "Hello, this is a test. Reply with 'API is working'" }
       ]);
-      console.log("OpenAI API connection test successful:", testResponse.content);
+      logger.info("[ChatBot] OpenAI API connection test successful:", testResponse.content);
     } catch (error) {
-      console.error("OpenAI API connection test failed:", error);
-      console.warn("Chat functionality may not work due to API connection issues");
+      logger.error("[ChatBot] OpenAI API connection test failed:", error);
+      logger.warn("[ChatBot] Chat functionality may not work due to API connection issues");
     }
   }
 
@@ -539,32 +519,26 @@ If there's a discrepancy between the sources:
     context?: string
   ): Promise<string> {
     try {
-      console.log(`Chat request received for sport: ${sport}`);
-      console.log(`Message: ${message.substring(0, 50)}${message.length > 50 ? '...' : ''}`);
-      console.log(`Chat history entries: ${chatHistory.length}`);
-      console.log(`Context provided: ${context ? 'yes' : 'no'}`);
+      logger.info(`[ChatBot] Chat request received for sport: ${sport}`);
+      logger.info(`[ChatBot] Message: ${message.substring(0, 50)}${message.length > 50 ? '...' : ''}`);
+      logger.info(`[ChatBot] Chat history entries: ${chatHistory.length}`);
+      logger.info(`[ChatBot] Context provided: ${context ? 'yes' : 'no'}`);
 
-      // Get the system prompt for the selected sport
       const systemPrompt = this.getPromptForSport(sport);
       if (!systemPrompt) {
-        console.error(`No prompt template found for sport: ${sport}`);
+        logger.error(`[ChatBot] No prompt template found for sport: ${sport}`);
         return "I don't have information about that sport yet.";
       }
 
-      // Format the message history
       const messages: any[] = [
         { role: "system", content: systemPrompt },
       ];
-
-      // Add context if provided
       if (context) {
         messages.push({
           role: "system",
           content: `Additional context for this conversation:\n${context}`,
         });
       }
-
-      // Add chat history (up to 10 messages)
       const recentHistory = chatHistory.slice(-10);
       for (const entry of recentHistory) {
         const role = this.mapRole(entry.role);
@@ -572,101 +546,69 @@ If there's a discrepancy between the sources:
           messages.push({ role, content: entry.content });
         }
       }
-
-      // Add the current message
       messages.push({ role: "user", content: message });
 
-      // Log the complete prompt for debugging
-      console.log(`Sending ${messages.length} messages to OpenAI`);
-      
-      // Make the API request with better error handling
+      logger.info(`[ChatBot] Sending ${messages.length} messages to OpenAI`);
       try {
         console.time('openai_api_call');
-        
-        // Make API call with timeout and retry logic
         let retryCount = 0;
         let response;
-        
         while (retryCount < 2) {
           try {
             response = await this.llm.invoke(messages);
-            break; // Success, exit retry loop
+            break;
           } catch (retryError: any) {
             retryCount++;
-            
-            // Only retry network errors, not invalid requests
             if (retryError.message?.includes('network') || 
                 retryError.message?.includes('timeout') || 
                 retryError.message?.includes('socket')) {
-              console.warn(`Retry ${retryCount}/2 due to network error:`, retryError.message);
-              // Wait before retry (500ms, then 1000ms)
+              logger.warn(`[ChatBot] Retry ${retryCount}/2 due to network error:`, retryError.message);
               await new Promise(resolve => setTimeout(resolve, retryCount * 500));
             } else {
-              // Don't retry other types of errors
               throw retryError;
             }
-            
-            // If we've reached max retries, throw the last error
             if (retryCount >= 2) {
               throw retryError;
             }
           }
         }
-        
         console.timeEnd('openai_api_call');
-
         if (!response) {
-          console.error('API response is undefined after retries');
+          logger.error('[ChatBot] API response is undefined after retries');
           return "Sorry, I couldn't generate a response due to a network error. Please try again.";
         }
-
-        console.log(`API response received, type: ${typeof response}`);
-        console.log(`Response has content: ${response.content ? 'yes' : 'no'}`);
-
-        // Extract and return the response
+        logger.info(`[ChatBot] API response received, type: ${typeof response}`);
+        logger.info(`[ChatBot] Response has content: ${response.content ? 'yes' : 'no'}`);
         const content = response.content;
         return typeof content === "string"
           ? content
           : "Sorry, I couldn't generate a response.";
       } catch (apiError: any) {
-        console.error(`API Error: ${apiError.message || 'Unknown error'}`);
-        
-        // Check for specific error types with more detailed handling
+        logger.error(`[ChatBot] API Error: ${apiError.message || 'Unknown error'}`);
         if (apiError.message?.includes('timeout') || apiError.message?.includes('network')) {
           return "The request couldn't be completed due to a network issue. Please check your connection and try again.";
         }
-        
         if (apiError.message?.includes('rate limit')) {
           return "I'm receiving too many requests right now. Please try again in a moment.";
         }
-        
         if (apiError.message?.includes('quota') || apiError.message?.includes('billing')) {
           return "Service temporarily unavailable. Please try again later.";
         }
-        
         if (apiError.message?.includes('key')) {
-          console.error('API key related error:', apiError.message);
+          logger.error('[ChatBot] API key related error:', apiError.message);
           return "I'm currently unable to access my knowledge. Please try again later.";
         }
-        
-        // Return a more specific error message for Android
         if (Platform.OS === 'android') {
-          return "I couldn't process your request at this time. Please try again later.";
+          return "I couldn't process your request at this time. Please try again later. (Android-specific error: " + apiError.message + "API Key Received: " + Constants.expoConfig?.extra?.openAiApiKey;
         }
-        
-        // Generic error message for other cases
         return "Sorry, I encountered an issue while processing your request. Please try again.";
       }
     } catch (error: any) {
-      console.error(`Error in chat method: ${error.message || 'Unknown error'}`);
-      console.error(`Stack trace:`, error.stack);
-      
-      // Platform-specific error handling
+      logger.error(`[ChatBot] Error in chat method: ${error.message || 'Unknown error'}`);
+      logger.error(`[ChatBot] Stack trace:`, error.stack);
       if (Platform.OS === 'android') {
-        return "I encountered an error. Please try again with a simpler request.";
+        return "I encountered an error. Please try again with a simpler request. (Android-specific error: " + error.message + ")";
       }
-      
-      // Standard error message
       return "Sorry, I encountered an error. Please try again.";
     }
   }
@@ -747,7 +689,7 @@ If there's a discrepancy between the sources:
     this.config = { ...this.config, ...config };
     
     // Get API key from multiple possible sources with priority
-    const apiKey =  process.env.EXPO_PUBLIC_OPENAI_API_KEY || Constants.expoConfig?.extra?.EXPO_PUBLIC_OPENAI_API_KEY || '';
+    const apiKey = Constants.expoConfig?.extra?.openAiApiKey || '';
     
     this.llm = new ChatOpenAI({
       openAIApiKey: apiKey,

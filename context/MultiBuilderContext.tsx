@@ -1,3 +1,4 @@
+import Constants from "expo-constants";
 import { OpenAI } from "openai";
 import React, {
   createContext,
@@ -21,7 +22,8 @@ const aflGoalscorersInDefeats = require("../assets/AFL_Goalscorers_in_Defeats.js
 const aflHomeAwayGoalscorers = require("../assets/AFL_Home_Away_Goalscorers.json");
 
 // Use consistent naming convention with uppercase
-const EXPO_PUBLIC_OPENAI_API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY || "";
+const EXPO_PUBLIC_OPENAI_API_KEY =
+  Constants.expoConfig?.extra?.openAiApiKey || "";
 
 if (!EXPO_PUBLIC_OPENAI_API_KEY) {
   console.error(
@@ -1082,20 +1084,30 @@ export const MultiBuilderProvider: React.FC<MultiBuilderProviderProps> = ({
   };
 
   useEffect(() => {
-    console.log("Environment variables status:");
-    console.log(
-      `EXPO_PUBLIC_OPENAI_API_KEY: ${
-        process.env.EXPO_PUBLIC_OPENAI_API_KEY ? "Set" : "Not set"
-      }`
-    );
-
-    // Safely log first and last chars of key if it exists
-    if (process.env.EXPO_PUBLIC_OPENAI_API_KEY) {
-      const key = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
+    // Verify environment variables
+    const verifyEnvironment = () => {
+      console.log("Environment Variables Status:");
       console.log(
-        `Key preview: ${key.substring(0, 3)}...${key.substring(key.length - 3)}`
+        "ENVIRONMENT:",
+        Constants.expoConfig?.extra?.ENVIRONMENT || "Not set"
       );
-    }
+      console.log(
+        "OpenAI API Key:",
+        Constants.expoConfig?.extra?.openAiApiKey ? "Set" : "Not set"
+      );
+      console.log(
+        "Twitter API Key:",
+        Constants.expoConfig?.extra?.twitterApiKey ? "Set" : "Not set"
+      );
+
+      // Log build type
+      console.log("Build Type:", __DEV__ ? "Development" : "Production");
+
+      // Log app version
+      console.log("App Version:", Constants.expoConfig?.version || "Unknown");
+    };
+
+    verifyEnvironment();
   }, []);
 
   return (
